@@ -19,10 +19,11 @@ class ImageDataset(Dataset):
     def __getitem__(self, index):
         image_name = self.image_names[index]
         img = Image.open(os.path.join(self.image_dir, image_name)).convert('RGB')
+        label = 0
 
         if self.transform:
             img = self.transform(img)
-        return img
+        return (img, label)
 
     def __len__(self):
         return len(self.image_names)
@@ -34,6 +35,7 @@ class ImageDataset(Dataset):
 def train_transform(size=64):
     transform_list = [
         transforms.Resize(size=(size, size)),
-        transforms.ToTensor()
+        transforms.ToTensor(),
+        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
     ]
     return transforms.Compose(transform_list)
